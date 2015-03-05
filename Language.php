@@ -17,4 +17,19 @@ class Language extends Model {
 	{
 		return $value ? 'True' : 'False';
 	}
+
+	public function languageContentData()
+	{
+		return $this->hasMany('App\Modules\Language\LanguageContentData', 'language_id');
+	}
+
+	public static function boot()
+	{
+		parent::boot();
+
+		Language::deleting(function($language)
+		{
+			$permission->languageContentData()->delete();
+		});
+	}
 }

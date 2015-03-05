@@ -1,4 +1,4 @@
-@extends('language::app')
+@extends('app')
 
 @section('content')
 

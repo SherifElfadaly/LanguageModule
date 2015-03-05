@@ -107,4 +107,27 @@ class LanguageController extends Controller {
 		return 	redirect()->back();
 	}
 
+	/**
+	 * Activate or disaple a given language.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getActive($id)
+	{
+		$this->language->changeActive($id);
+		return 	redirect()->back();
+	}
+
+	/**
+	 * Set the given language to default.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getDefault($id)
+	{
+		$this->language->changeDefault($id);
+		return 	redirect()->back();
+	}
 }

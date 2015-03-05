@@ -1,4 +1,4 @@
-@extends('language::app')
+@extends('app')
 
 @section('content')
 
@@ -30,6 +30,20 @@
 					<td>
 						<a class="btn btn-default" href='{{ url("/language/edit/$language->id") }}' role="button">Edit</a>
 						<a class="btn btn-default" href='{{ url("/language/delete/$language->id") }}' role="button">Delete</a>
+						<a 
+						class="btn btn-default" 
+						href='{{ url("/language/active/$language->id") }}' 
+						role="button"
+						>
+						@if($language->is_active === 'True')
+							Disable
+						@else
+							Activate
+						@endif
+						</a>
+						@if($language->is_default !== 'True')
+							<a class="btn btn-default" href='{{ url("/language/default/$language->id") }}' role="button">Default</a>
+						@endif
 					</td>
 				</tr>
 				@endforeach

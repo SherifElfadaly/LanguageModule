@@ -13,6 +13,7 @@
 
 Route::group(['prefix' => 'language'], function() {
 	Route::controllers([
-		'/' => 'LanguageController',
+		'/languagecontents' => 'LanguageContentController',
+		'/'                 => 'LanguageController',
 		]);
 });
