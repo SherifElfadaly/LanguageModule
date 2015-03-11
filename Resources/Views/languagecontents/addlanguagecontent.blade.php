@@ -21,7 +21,7 @@
 			</ul>
 		</div>
 		@endif
-		<h3>Add New Lamguage Content</h3>
+		<h3>Add New Language Content</h3>
 		<form class="form-inline" id="languageContent_form_edit" method="post">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 

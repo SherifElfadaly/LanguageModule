@@ -21,6 +21,7 @@ class LanguageController extends Controller {
 	public function __construct(LanguageRepository $language)
 	{
 		$this->language = $language;
+		$this->middleware('AclAuthenticate');
 	}
 
 	/**

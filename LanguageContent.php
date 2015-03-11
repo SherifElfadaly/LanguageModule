@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class LanguageContent extends Model {
 
 	protected $table    = 'language_contents';
-	protected $fillable = ['title', 'value', 'item_id'];
+	protected $fillable = ['title', 'value', 'item_id', 'item_type'];
 
 	public function languageContentData()
 	{

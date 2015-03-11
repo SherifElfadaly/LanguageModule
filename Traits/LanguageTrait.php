@@ -105,8 +105,11 @@ trait LanguageTrait{
 	  */
 	public function resetDefaultLanguage()
 	{
-		$language             = $this->getDefaultLanguage();
-		$language->is_default = 0;
-		$language->save();
+		$language = $this->getDefaultLanguage();
+		if($language)
+		{
+			$language->is_default = 0;
+			$language->save();
+		}
 	}
 }

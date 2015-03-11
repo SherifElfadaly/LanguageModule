@@ -16,7 +16,7 @@ class CreateLanguageContentsTable extends Migration
 		{
 			Schema::create('language_contents', function(Blueprint $table) {
 				$table->increments('id');
-				$table->string('title')->unique;
+				$table->string('title');
 				$table->integer('item_id');
 				$table->string('item_type');
 				$table->timestamps();

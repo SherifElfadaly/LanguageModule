@@ -6,6 +6,29 @@ use App\Modules\Language\Repositories\LanguageRepository;
 
 trait LanguageContentTrait{
 	
+	public function getContent($obj,$languageKey, $title = false)
+	{
+		if( ! $title)
+		{
+			$data = array();
+			foreach ($obj->LanguageContents as $languageContent) 
+			{
+				$languageContentData =  $languageContent->languageContentData()->
+				where('language_id', $this->getLanguageByKey($languageKey)->id)->first();
+				
+				$data[$languageContentData->key] = $languageContentData->value;
+			}
+			return $data;
+		}
+		else
+		{
+			$languageContent = $obj->LanguageContents()->where('title', $title)->first();
+			
+			return $languageContent->languageContentData()->
+			where('language_id', $this->getLanguageByKey($languageKey)->id)->first()->value;
+		}
+	}
+
 	public function getLanguageContent($id)
 	{
 		return LanguageContent::find($id);
@@ -16,12 +39,19 @@ trait LanguageContentTrait{
 		return LanguageContent::whereRaw('item_id=? and item_type=?', [$itemId, $item])->get();
 	}
 
-	public function prepareLanguageContentData($data)
+	public function createLanguageContent($data, $item, $itemId)
 	{
 		$languageContents = array();
 		for ($i = 0 ; $i < count($data['key']) ; $i++) 
 		{ 
-			$languageContentData = LanguageContentData::where('key', $data['key'][$i])->first();
+			$languageContents[]  = LanguageContent::firstOrCreate([
+				'title'     => $data['title'][$i],
+				'item_type' =>  ucfirst($item),
+				'item_id'   => $itemId,
+				]);
+
+			$languageContentData = LanguageContentData::where('key', $data['key'][$i])
+			->where('language_content_id', $languageContents[$i]->id)->first();
 
 			if ($languageContentData)
 			{
@@ -31,29 +61,15 @@ trait LanguageContentTrait{
 			}
 			else
 			{
-				$languageContentData =  LanguageContentData::firstOrNew([
+				$languageContentData =  LanguageContentData::create([
 					'key'         => $data['key'][$i],
 					'value'       => $data['value'][$i], 
 					'language_id' => $data['language_id']
 					]);
 			}
-
-			$languageContents[]  =  LanguageContent::firstOrNew(['title' => $data['title'][$i]]);
-
-			$languageContents[$i]->save();
 			$languageContents[$i]->languageContentData()->save($languageContentData);
 		}
 		return $languageContents;
-	}
-
-	public function createLanguageContent($languageContents, $item, $itemId)
-	{	
-		foreach ($languageContents as $languageContent) 
-		{
-			$languageContent->item_id   = $itemId;
-			$languageContent->item_type = ucfirst($item);
-			$languageContent->save();
-		}
 	}
 
 	public function deleteLanguageContent($id)

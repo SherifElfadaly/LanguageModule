@@ -21,6 +21,7 @@ class LanguageContentController extends Controller {
 	public function __construct(LanguageRepository $language)
 	{
 		$this->language = $language;
+		$this->middleware('AclAuthenticate');
 	}
 
 	/**
@@ -86,9 +87,8 @@ class LanguageContentController extends Controller {
 		}
 		if ( ! empty($errors)) 	return redirect()->back()->withErrors($errors);
 
-		$data            = $this->language->prepareLanguageContentData($request->all());
-		$languageContent = $this->language->createLanguageContent($data, $item, $itemId);
-
+		$this->language->createLanguageContent($request->all(), $item, $itemId);
+		
 		return 	redirect()->back()->with('message', 'Your languageContent had been created');
 	}
 
