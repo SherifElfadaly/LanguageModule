@@ -1,8 +1,9 @@
 {
-	"name": "Language",
-	"slug": "language",
-	"version": "1.1",
-	"description": "This is the description for the Language module.",
-	"repo_link": "https://github.com/SherifElfadaly/MarvelLanguage.git",
-	"enabled": true
+    "name": "Language",
+    "slug": "language",
+    "version": "1.2",
+    "description": "This is the description for the Language module.",
+    "repo_link": "https:\/\/github.com\/SherifElfadaly\/MarvelLanguage.git",
+    "type": "plugin",
+    "enabled": true
 }

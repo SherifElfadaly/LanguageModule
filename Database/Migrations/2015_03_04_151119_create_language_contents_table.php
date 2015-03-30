@@ -15,10 +15,10 @@ class CreateLanguageContentsTable extends Migration
 		if ( ! Schema::hasTable('language_contents'))
 		{
 			Schema::create('language_contents', function(Blueprint $table) {
-				$table->increments('id');
-				$table->string('title');
-				$table->integer('item_id');
-				$table->string('item_type');
+				$table->bigIncrements('id');
+				$table->string('title', 150)->index();
+				$table->bigInteger('item_id')->unsigned();
+				$table->string('item_type', 100)->index();
 				$table->timestamps();
 			});
 		}

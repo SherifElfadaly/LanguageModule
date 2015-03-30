@@ -6,7 +6,7 @@ trait LanguageTrait{
 	
 	public function getAllLanguages()
 	{
-		return Language::all();
+		return Language::with('languageContentData')->get();
 	}
 
 	public function getLanguage($id)
@@ -16,23 +16,25 @@ trait LanguageTrait{
 
 	public function getLanguageByKey($key)
 	{
-		return Language::where('key', $key)->first();
+		return Language::where('key', $key)->first() ?: $this->getDefaultLanguage();
 	}
 
 	public function getDefaultLanguage()
 	{
-		return Language::where('is_default', '1')->first();
+		return Language::with('languageContentData')->where('is_default', '1')->first();
 	}
 
 	public function createLanguage($data)
 	{
-		if ($data['is_default'])  $this->resetDefaultLanguage();
+		if($data['is_default'])  $this->resetDefaultLanguage();
 		return Language::create($data);
 	}
 
 	public function updatetLanguage($id, $data)
 	{
 		$language = $this->getLanguage($id);
+
+		if($language->is_default)  $this->resetDefaultLanguage();
 		return $language->update($data);
 	}
 

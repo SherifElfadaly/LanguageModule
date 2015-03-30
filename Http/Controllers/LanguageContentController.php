@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\Modules\Language\Repositories\LanguageRepository;
+use GalleryRepository;
 
 use Illuminate\Http\Request;
-
 class LanguageContentController extends Controller {
 
 	/**
@@ -42,13 +42,22 @@ class LanguageContentController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getCreate($item, $itemId, $languageId = false, $languageContentId = false)
+	public function getCreate($item, $itemId, Request $request, $languageId = false, $languageContentId = false)
 	{	
-		$Language            = $languageId ? $this->language->getLanguage($languageId) : $this->language->getDefaultLanguage();
+		if($request && $request->ajax()) 
+		{
+			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
+			return $insertedGalleries;
+		}
+
+		$galleries           = GalleryRepository::getAllGalleries();
+		$galleryBlock        = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
+
+		$language            = $languageId ? $this->language->getLanguage($languageId) : $this->language->getDefaultLanguage();
 		$languageContent     = $languageContentId ? $this->language->getLanguageContent($languageContentId) : false;
 		$languageContentData = $this->language->getLanguageContentData($languageContent, $languageId);
 
-		return view('language::languagecontents.addlanguagecontent', compact('Language', 'languageContent', 'languageContentData', 'itemId', 'item'));
+		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'galleryBlock'));
 	}
 
 	/**

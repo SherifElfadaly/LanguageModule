@@ -15,21 +15,21 @@ class CreateLanguagesTable extends Migration
 		if ( ! Schema::hasTable('languages'))
 		{
 			Schema::create('languages', function(Blueprint $table) {
-				$table->increments('id');
-				$table->string('key', 3)->unique();
-				$table->string('title', 150);
-				$table->string('description');
+				$table->bigIncrements('id');
+				$table->string('key', 3)->unique()->index();
+				$table->string('title', 150)->index();
+				$table->string('description', 255)->index();
 				$table->string('flag', 100);
-				$table->boolean('is_active')->default(0);
-				$table->boolean('is_default')->default(0);
+				$table->boolean('is_active')->default(0)->index();
+				$table->boolean('is_default')->default(0)->index();
 				$table->timestamps();
 			});
 
 			DB::table('languages')->insert(
 				array(
 					'key'         => 'en',
-					'description' => 'English',
-					'password'    => 'English Language',
+					'title'    	  => 'English',
+					'description' => 'English Language',
 					'flag'        => 'English',
 					'is_active'   => 1,
 					'is_default'  => 1,

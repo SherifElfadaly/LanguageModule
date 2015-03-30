@@ -15,11 +15,16 @@ class CreateLanguageContentDatasTable extends Migration
 		if ( ! Schema::hasTable('language_content_data'))
 		{
 			Schema::create('language_content_data', function(Blueprint $table) {
-				$table->increments('id');	
-				$table->string('key');
+				$table->bigIncrements('id');	
+				$table->string('key', 100)->index();
 				$table->text('value');
-				$table->integer('language_content_id');
-				$table->integer('language_id');
+
+				$table->bigInteger('language_content_id')->unsigned();
+				$table->foreign('language_content_id')->references('id')->on('language_contents');
+
+				$table->bigInteger('language_id')->unsigned();
+				$table->foreign('language_id')->references('id')->on('languages');
+
 				$table->timestamps();
 			});
 		}

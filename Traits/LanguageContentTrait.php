@@ -2,30 +2,43 @@
 
 use App\Modules\Language\LanguageContent;
 use App\Modules\Language\LanguageContentData;
-use App\Modules\Language\Repositories\LanguageRepository;
 
 trait LanguageContentTrait{
 	
-	public function getContent($obj,$languageKey, $title = false)
+	public function search($query)
+	{	
+		return LanguageContent::whereIn(
+			'id',
+			LanguageContentData::where('value','like' , '%' . $query . '%')->lists('language_content_id')
+			)->lists('item_id');
+	}
+
+	public function getContent($itemId, $item, $languageKey, $title = false)
 	{
 		if( ! $title)
 		{
 			$data = array();
-			foreach ($obj->LanguageContents as $languageContent) 
+			foreach ($this->getItemLanguageContent($item, $itemId) as $languageContent) 
 			{
-				$languageContentData =  $languageContent->languageContentData()->
-				where('language_id', $this->getLanguageByKey($languageKey)->id)->first();
-				
-				$data[$languageContentData->key] = $languageContentData->value;
+				$languageContentData           =  $languageContent->
+				                                  languageContentData()->
+				                                  where('language_id', $this->getLanguageByKey($languageKey)->id)->
+				                                  first();
+
+				$data[$languageContent->title] = $languageContentData->value;
 			}
 			return $data;
 		}
 		else
 		{
-			$languageContent = $obj->LanguageContents()->where('title', $title)->first();
+			$languageContent = $this->getItemLanguageContent($item, $itemId)->
+			                         where('title', $title)->
+			                         first();
 			
-			return $languageContent->languageContentData()->
-			where('language_id', $this->getLanguageByKey($languageKey)->id)->first()->value;
+			return $languageContent->
+			       languageContentData()->
+			       where('language_id', $this->getLanguageByKey($languageKey)->id)->
+			       first()->value;
 		}
 	}
 
@@ -36,7 +49,9 @@ trait LanguageContentTrait{
 
 	public function getItemLanguageContent($item, $itemId)
 	{
-		return LanguageContent::whereRaw('item_id=? and item_type=?', [$itemId, $item])->get();
+		return LanguageContent::with('languageContentData')->
+		                        whereRaw('item_id=? and item_type=?', [$itemId, ucfirst($item)])->
+		                        get();
 	}
 
 	public function createLanguageContent($data, $item, $itemId)
@@ -46,12 +61,13 @@ trait LanguageContentTrait{
 		{ 
 			$languageContents[]  = LanguageContent::firstOrCreate([
 				'title'     => $data['title'][$i],
-				'item_type' =>  ucfirst($item),
+				'item_type' => ucfirst($item),
 				'item_id'   => $itemId,
 				]);
 
-			$languageContentData = LanguageContentData::where('key', $data['key'][$i])
-			->where('language_content_id', $languageContents[$i]->id)->first();
+			$languageContentData = LanguageContentData::where('key', $data['key'][$i])->
+			                       where('language_content_id', $languageContents[$i]->id)->
+			                       first();
 
 			if ($languageContentData)
 			{
@@ -61,7 +77,7 @@ trait LanguageContentTrait{
 			}
 			else
 			{
-				$languageContentData =  LanguageContentData::create([
+				$languageContentData =  new LanguageContentData([
 					'key'         => $data['key'][$i],
 					'value'       => $data['value'][$i], 
 					'language_id' => $data['language_id']
@@ -78,16 +94,23 @@ trait LanguageContentTrait{
 		$languageContent->delete();
 	}
 
+	public function deleteItemLanguageContents($item, $itemId)
+	{	
+		foreach ($this->getItemLanguageContent($item, $itemId) as  $languageContent) 
+		{
+			$languageContent->languageContentData()->delete();
+			$languageContent->delete();
+		}
+	}
+
 	public function getLanguageContentData($languageContent, $languageId)
 	{
 		if ( ! $languageContent) return false;
-
 		return $languageContent->languageContentData->where('language_id', $languageId)->first() ?: false;
 	}
 
 	public function languageContentsNeedTranslation($item, $itemId)
 	{	
-		$needTranslation  = array();
 		$languageContents = $this->getItemLanguageContent($item, $itemId);
 		foreach ($languageContents as $languageContent) 
 		{
