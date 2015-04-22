@@ -50,14 +50,12 @@ class LanguageContentController extends Controller {
 			return $insertedGalleries;
 		}
 
-		$galleries           = GalleryRepository::getAllGalleries();
-		$galleryBlock        = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
-
+		$mediaLibrary        = GalleryRepository::getMediaLibrary();
 		$language            = $languageId ? $this->language->getLanguage($languageId) : $this->language->getDefaultLanguage();
 		$languageContent     = $languageContentId ? $this->language->getLanguageContent($languageContentId) : false;
 		$languageContentData = $this->language->getLanguageContentData($languageContent, $languageId);
 
-		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'galleryBlock'));
+		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'mediaLibrary'));
 	}
 
 	/**
@@ -110,6 +108,19 @@ class LanguageContentController extends Controller {
 	public function getDelete($id)
 	{
 		$this->language->deleteLanguageContent($id);
+		return 	redirect()->back();
+	}
+
+	/**
+	 * Duplicate the languageContent for all languages
+	 * with the default language.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getDuplicate($id)
+	{
+		$this->language->duplicateLanguageContentData($this->language->getLanguageContent($id));
 		return 	redirect()->back();
 	}
 

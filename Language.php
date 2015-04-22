@@ -29,7 +29,7 @@ class Language extends Model {
 
 		Language::deleting(function($language)
 		{
-			$permission->languageContentData()->delete();
+			$language->languageContentData()->delete();
 		});
 	}
 }

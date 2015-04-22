@@ -4,6 +4,15 @@
 
 <div class="container">
 	<div class="col-sm-9">
+		
+		@if( ! $isAllLanguageContentDataTranslated)
+			<a 
+			class ="btn btn-default" href='{{ url("/language/duplicateall") }}' 
+			role  ="button">
+			Duplicate all language content data
+			</a>
+		@endif
+		
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -31,9 +40,9 @@
 						<a class="btn btn-default" href='{{ url("/language/edit/$language->id") }}' role="button">Edit</a>
 						<a class="btn btn-default" href='{{ url("/language/delete/$language->id") }}' role="button">Delete</a>
 						<a 
-						class="btn btn-default" 
-						href='{{ url("/language/active/$language->id") }}' 
-						role="button"
+						class ="btn btn-default" 
+						href  ='{{ url("/language/active/$language->id") }}' 
+						role  ="button"
 						>
 						@if($language->is_active === 'True')
 							Disable

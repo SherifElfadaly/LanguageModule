@@ -31,8 +31,10 @@ class LanguageController extends Controller {
 	 */
 	public function getIndex()
 	{
-		$languages = $this->language->getAllLanguages();
-		return view('language::languages.languages', compact('languages'));
+		$languages                          = $this->language->getAllLanguages();
+		$isAllLanguageContentDataTranslated = $this->language->isTranslated();
+		
+		return view('language::languages.languages', compact('languages', 'isAllLanguageContentDataTranslated'));
 	}
 
 	/**
@@ -56,7 +58,7 @@ class LanguageController extends Controller {
 		$data['title']       = $request->get('title');
 		$data['description'] = $request->get('description');
 		$data['flag']        = $request->get('flag');
-		$data['is_active']   = $request->get('is_active') ? 1 : 0;
+		$data['is_active']   = $request->get('is_active')  ? 1 : 0;
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
 		$language = $this->language->createLanguage($data);
@@ -129,6 +131,18 @@ class LanguageController extends Controller {
 	public function getDefault($id)
 	{
 		$this->language->changeDefault($id);
+		return 	redirect()->back();
+	}
+
+	/**
+	 * Duplicate all languageContent for all languages
+	 * with the default language.
+	 *
+	 * @return Response
+	 */
+	public function getDuplicateall()
+	{
+		$this->language->duplicateLanguageContentData();
 		return 	redirect()->back();
 	}
 }

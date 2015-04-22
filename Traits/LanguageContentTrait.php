@@ -112,6 +112,7 @@ trait LanguageContentTrait{
 	public function languageContentsNeedTranslation($item, $itemId)
 	{	
 		$languageContents = $this->getItemLanguageContent($item, $itemId);
+
 		foreach ($languageContents as $languageContent) 
 		{
 			$languages = array();
@@ -127,5 +128,47 @@ trait LanguageContentTrait{
 			$languageContent->languages = $languages;
 		}
 		return $languageContents;
+	}
+
+	public function duplicateLanguageContentData($languageContent = false)
+	{
+		$languageContents = $languageContent ? [$languageContent] : LanguageContent::all();
+		
+		foreach ($languageContents as $languageContent) 
+		{
+			foreach ($this->getAllLanguages() as $lang) 
+			{
+				if( ! in_array($lang->id, $languageContent->languageContentData->lists('language_id')))
+				{
+					$data = $languageContent->languageContentData()->
+						                      where('language_id', '=', $this->getDefaultLanguage()->id)->
+						                      first();
+
+					$languageContentData = new LanguageContentData([
+						'key'         => $data->key,
+						'value'       => $data->value,
+						'language_id' => $lang->id
+						]);
+					$languageContent->languageContentData()->save($languageContentData);
+				}
+			}
+		}
+	}
+
+	public function isTranslated($languageContent = false)
+	{
+		$languageContents = $languageContent ? [$languageContent] : LanguageContent::all();
+		
+		foreach ($languageContents as $languageContent) 
+		{
+			foreach ($this->getAllLanguages() as $lang) 
+			{
+				if( ! in_array($lang->id, $languageContent->languageContentData->lists('language_id')))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

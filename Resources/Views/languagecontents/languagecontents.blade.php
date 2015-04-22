@@ -6,8 +6,8 @@
 		<h3>{{ $item }}'s Language Content</h3>
 
 		<a 
-		class="btn btn-default" href='{{ url("/language/languagecontents/create", [$item, $itemId]) }}' 
-		role="button">
+		class ="btn btn-default" href='{{ url("/language/languagecontents/create", [$item, $itemId]) }}' 
+		role  ="button">
 		Add Language Content Data
 		</a>
 
@@ -28,22 +28,31 @@
 						<td>{{ $languageContent->languageContentData->first()->value }}</td>
 						<td>
 							<a 
-							class="btn btn-default" 
-							href='{{ url("/language/languagecontents/delete", [$languageContent->id]) }}' 
-							role="button">
+							class ="btn btn-default" 
+							href  ='{{ url("/language/languagecontents/delete", [$languageContent->id]) }}' 
+							role  ="button">
 							Delete
 							</a>
 
 							@foreach($languageContent->languages as $langugage)
 								<a 
-								class="btn btn-default" 
-								href='{{ url("/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
-								role="button"
+								class ="btn btn-default" 
+								href  ='{{ url("/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
+								role  ="button"
 								>
 								{{ $langugage['lang']->key }}
 								<small>@if( ! $langugage['translated']) || Not Translated @endif</small>
 								</a>
 							@endforeach
+							
+							@if( ! $langugage['translated'])
+								<a 
+								class ="btn btn-default" 
+								href  ='{{ url("/language/languagecontents/duplicate", [$languageContent->id]) }}' 
+								role  ="button">
+								Duplicate
+								</a>
+							@endif
 						</td>
 					</tr>
 				@endforeach
