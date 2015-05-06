@@ -1,6 +1,6 @@
 @extends('app')
-
 @section('content')
+
 <div class="container">
 	<div class="col-sm-9">
 		<h3>{{ $item }}'s Language Content</h3>
@@ -27,31 +27,27 @@
 						<td>{{ $languageContent->title }}</td>
 						<td>{{ $languageContent->languageContentData->first()->value }}</td>
 						<td>
-							<a 
-							class ="btn btn-default" 
-							href  ='{{ url("/language/languagecontents/delete", [$languageContent->id]) }}' 
-							role  ="button">
-							Delete
-							</a>
 
-							@foreach($languageContent->languages as $langugage)
+							@if(\AclRepository::can('delete', 'LanguageContents'))
 								<a 
 								class ="btn btn-default" 
-								href  ='{{ url("/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
-								role  ="button"
-								>
-								{{ $langugage['lang']->key }}
-								<small>@if( ! $langugage['translated']) || Not Translated @endif</small>
-								</a>
-							@endforeach
-							
-							@if( ! $langugage['translated'])
-								<a 
-								class ="btn btn-default" 
-								href  ='{{ url("/language/languagecontents/duplicate", [$languageContent->id]) }}' 
+								href  ='{{ url("/language/languagecontents/delete", [$languageContent->id]) }}' 
 								role  ="button">
-								Duplicate
+								Delete
 								</a>
+							@endif
+
+							@if(\AclRepository::can('add', 'LanguageContents'))
+								@foreach($languageContent->languages as $langugage)
+									<a 
+									class ="btn btn-default" 
+									href  ='{{ url("/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
+									role  ="button"
+									>
+									{{ $langugage['lang']->key }}
+									<small>@if( ! $langugage['translated']) || Not Translated @endif</small>
+									</a>
+								@endforeach
 							@endif
 						</td>
 					</tr>

@@ -30,12 +30,12 @@
 				<label for="inputEmail3" class="col-sm-2 control-label">Language Key</label>
 				<div class="col-sm-10">
 					<input 
-					type="text" 
-					class="form-control" 
-					id="language_key" 
-					name="key" 
-					placeholder="Language Key" 
-					value="{{ $language->key }}"
+					type        ="text" 
+					class       ="form-control" 
+					id          ="language_key" 
+					name        ="key" 
+					placeholder ="Language Key" 
+					value       ="{{ $language->key }}"
 					>
 				</div>
 			</div>
@@ -43,12 +43,12 @@
 				<label for="inputEmail3" class="col-sm-2 control-label">Language Title</label>
 				<div class="col-sm-10">
 					<input 
-					type="text" 
-					class="form-control" 
-					id="language_title" 
-					name="title" 
-					placeholder="Language Title" 
-					value="{{ $language->title }}"
+					type        ="text" 
+					class       ="form-control" 
+					id          ="language_title" 
+					name        ="title" 
+					placeholder ="Language Title" 
+					value       ="{{ $language->title }}"
 					>
 				</div>
 			</div>
@@ -56,12 +56,12 @@
 				<label for="inputEmail3" class="col-sm-2 control-label">Language Description</label>
 				<div class="col-sm-10">
 					<input 
-					type="text" 
-					class="form-control" 
-					id="language_desription" 
-					name="description" 
-					placeholder="Language Description" 
-					value="{{ $language->description }}"
+					type        ="text" 
+					class       ="form-control" 
+					id          ="language_desription" 
+					name        ="description" 
+					placeholder ="Language Description" 
+					value       ="{{ $language->description }}"
 					>
 				</div>
 			</div>
@@ -69,12 +69,12 @@
 				<label for="inputEmail3" class="col-sm-2 control-label">Language Flag</label>
 				<div class="col-sm-10">
 					<input 
-					type="text" 
-					class="form-control" 
-					id="language_flag" 
-					name="flag" 
-					placeholder="Language Flag" 
-					value="{{ $language->flag }}"
+					type        ="text" 
+					class       ="form-control" 
+					id          ="language_flag" 
+					name        ="flag" 
+					placeholder ="Language Flag" 
+					value       ="{{ $language->flag }}"
 					>
 				</div>
 			</div>
@@ -82,11 +82,11 @@
 				<label for="inputPassword3" class="col-sm-2 control-label">Is Active</label>
 				<div class="col-sm-10">
 					<input 
-					type="checkbox" 
-					id="is_active" 
-					name="is_active" 
+					type ="checkbox" 
+					id   ="is_active" 
+					name ="is_active" 
 					@if($language->is_active === 'True') 
-					checked
+						checked
 					@endif"
 					>
 					Is Active
@@ -96,11 +96,11 @@
 				<label for="inputPassword3" class="col-sm-2 control-label">Is Default</label>
 				<div class="col-sm-10">
 					<input 
-					type="checkbox" 
-					id="is_default" 
-					name="is_default" 
+					type ="checkbox" 
+					id   ="is_default" 
+					name ="is_default" 
 					@if($language->is_default === 'True') 
-					checked
+						checked
 					@endif"
 					>
 					Is Default

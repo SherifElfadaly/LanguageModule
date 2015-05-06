@@ -1,18 +1,11 @@
 <?php namespace App\Modules\Language\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Modules\Language\Repositories\LanguageRepository;
 use App\Modules\Language\Http\Requests\LanguageFormRequest;
 
 
-class LanguageController extends Controller {
-
-	/**
-	 * The InstallationRepository implementation.
-	 *
-	 * @var InstallationRepository
-	 */
-	protected $language;
+class LanguageController extends BaseController {
 
 	/**
 	 * Create new ModuleController instance.
@@ -20,8 +13,7 @@ class LanguageController extends Controller {
 	 */
 	public function __construct(LanguageRepository $language)
 	{
-		$this->language = $language;
-		$this->middleware('AclAuthenticate');
+		parent::__construct($language, 'Languages');
 	}
 
 	/**
@@ -31,10 +23,10 @@ class LanguageController extends Controller {
 	 */
 	public function getIndex()
 	{
-		$languages                          = $this->language->getAllLanguages();
-		$isAllLanguageContentDataTranslated = $this->language->isTranslated();
+		$this->hasPermission('show');
+		$languages = $this->repository->getAllLanguages();
 		
-		return view('language::languages.languages', compact('languages', 'isAllLanguageContentDataTranslated'));
+		return view('language::languages.languages', compact('languages'));
 	}
 
 	/**
@@ -44,6 +36,7 @@ class LanguageController extends Controller {
 	 */
 	public function getCreate()
 	{
+		$this->hasPermission('add');
 		return view('language::languages.addlanguage');
 	}
 
@@ -54,6 +47,7 @@ class LanguageController extends Controller {
 	 */
 	public function postCreate(LanguageFormRequest $request)
 	{
+		$this->hasPermission('add');
 		$data['key']         = $request->get('key');
 		$data['title']       = $request->get('title');
 		$data['description'] = $request->get('description');
@@ -61,7 +55,7 @@ class LanguageController extends Controller {
 		$data['is_active']   = $request->get('is_active')  ? 1 : 0;
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
-		$language = $this->language->createLanguage($data);
+		$language = $this->repository->createLanguage($data);
 
 		return 	redirect()->back()->with('message', 'Your language had been created');
 	}
@@ -74,7 +68,8 @@ class LanguageController extends Controller {
 	 */
 	public function getEdit($id)
 	{
-		$language = $this->language->getLanguage($id);
+		$this->hasPermission('edit');
+		$language = $this->repository->getLanguage($id);
 		return view('language::languages.editlanguage', compact('language'));
 	}
 
@@ -86,7 +81,8 @@ class LanguageController extends Controller {
 	 */
 	public function postEdit($id, LanguageFormRequest $request)
 	{
-		$language            = $this->language->getLanguage($id);
+		$this->hasPermission('edit');
+		$language            = $this->repository->getLanguage($id);
 		$data['key']         = $request->get('key');
 		$data['title']       = $request->get('title');
 		$data['description'] = $request->get('description');
@@ -94,7 +90,7 @@ class LanguageController extends Controller {
 		$data['is_active']   = $request->get('is_active') ? 1 : 0;
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
-		$this->language->updatetLanguage($language->id, $data);
+		$this->repository->updatetLanguage($language->id, $data);
 		return 	redirect()->back()->with('message', 'Your language had been Updated');
 	}
 
@@ -106,7 +102,8 @@ class LanguageController extends Controller {
 	 */
 	public function getDelete($id)
 	{
-		$this->language->deleteLanguage($id);
+		$this->hasPermission('delete');
+		$this->repository->deleteLanguage($id);
 		return 	redirect()->back();
 	}
 
@@ -118,7 +115,9 @@ class LanguageController extends Controller {
 	 */
 	public function getActive($id)
 	{
-		$this->language->changeActive($id);
+		$this->hasPermission('edit');
+		$this->repository->changeActive($id);
+
 		return 	redirect()->back();
 	}
 
@@ -130,19 +129,9 @@ class LanguageController extends Controller {
 	 */
 	public function getDefault($id)
 	{
-		$this->language->changeDefault($id);
-		return 	redirect()->back();
-	}
-
-	/**
-	 * Duplicate all languageContent for all languages
-	 * with the default language.
-	 *
-	 * @return Response
-	 */
-	public function getDuplicateall()
-	{
-		$this->language->duplicateLanguageContentData();
+		$this->hasPermission('edit');
+		$this->repository->changeDefault($id);
+		
 		return 	redirect()->back();
 	}
 }

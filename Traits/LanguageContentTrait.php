@@ -9,7 +9,7 @@ trait LanguageContentTrait{
 	{	
 		return LanguageContent::whereIn(
 			'id',
-			LanguageContentData::where('value','like' , '%' . $query . '%')->lists('language_content_id')
+			LanguageContentData::where('value', 'like', '%' . $query . '%')->lists('language_content_id')
 			)->lists('item_id');
 	}
 
@@ -24,21 +24,37 @@ trait LanguageContentTrait{
 				                                  languageContentData()->
 				                                  where('language_id', $this->getLanguageByKey($languageKey)->id)->
 				                                  first();
-
+				                                  
+				if($languageContentData === null)
+				{
+					$languageContentData       =  $languageContent->
+					                              languageContentData()->
+					                              where('language_id', $this->getDefaultLanguage()->id)->
+					                              first();
+				}
 				$data[$languageContent->title] = $languageContentData->value;
 			}
 			return $data;
 		}
 		else
 		{
-			$languageContent = $this->getItemLanguageContent($item, $itemId)->
-			                         where('title', $title)->
-			                         first();
+			$languageContent         = $this->getItemLanguageContent($item, $itemId)->
+			                           where('title', $title)->
+			                           first();
 			
-			return $languageContent->
-			       languageContentData()->
-			       where('language_id', $this->getLanguageByKey($languageKey)->id)->
-			       first()->value;
+			$languageContentData     = $languageContent->
+			                           languageContentData()->
+			                           where('language_id', $this->getLanguageByKey($languageKey)->id)->
+			                           first();
+
+           if($languageContentData === null)
+           {
+	           	$languageContentData = $languageContent->
+	           	                       languageContentData()->
+	           	                       where('language_id', $this->getDefaultLanguage()->id)->
+	           	                       first();
+           }
+           return $languageContentData->value;
 		}
 	}
 
@@ -50,7 +66,7 @@ trait LanguageContentTrait{
 	public function getItemLanguageContent($item, $itemId)
 	{
 		return LanguageContent::with('languageContentData')->
-		                        whereRaw('item_id=? and item_type=?', [$itemId, ucfirst($item)])->
+		                        whereRaw('item_id=? and item_type=?', [$itemId, $item])->
 		                        get();
 	}
 
@@ -61,7 +77,7 @@ trait LanguageContentTrait{
 		{ 
 			$languageContents[]  = LanguageContent::firstOrCreate([
 				'title'     => $data['title'][$i],
-				'item_type' => ucfirst($item),
+				'item_type' => $item,
 				'item_id'   => $itemId,
 				]);
 
@@ -128,47 +144,5 @@ trait LanguageContentTrait{
 			$languageContent->languages = $languages;
 		}
 		return $languageContents;
-	}
-
-	public function duplicateLanguageContentData($languageContent = false)
-	{
-		$languageContents = $languageContent ? [$languageContent] : LanguageContent::all();
-		
-		foreach ($languageContents as $languageContent) 
-		{
-			foreach ($this->getAllLanguages() as $lang) 
-			{
-				if( ! in_array($lang->id, $languageContent->languageContentData->lists('language_id')))
-				{
-					$data = $languageContent->languageContentData()->
-						                      where('language_id', '=', $this->getDefaultLanguage()->id)->
-						                      first();
-
-					$languageContentData = new LanguageContentData([
-						'key'         => $data->key,
-						'value'       => $data->value,
-						'language_id' => $lang->id
-						]);
-					$languageContent->languageContentData()->save($languageContentData);
-				}
-			}
-		}
-	}
-
-	public function isTranslated($languageContent = false)
-	{
-		$languageContents = $languageContent ? [$languageContent] : LanguageContent::all();
-		
-		foreach ($languageContents as $languageContent) 
-		{
-			foreach ($this->getAllLanguages() as $lang) 
-			{
-				if( ! in_array($lang->id, $languageContent->languageContentData->lists('language_id')))
-				{
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }

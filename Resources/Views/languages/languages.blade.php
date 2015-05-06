@@ -1,18 +1,8 @@
 @extends('app')
-
 @section('content')
 
 <div class="container">
-	<div class="col-sm-9">
-		
-		@if( ! $isAllLanguageContentDataTranslated)
-			<a 
-			class ="btn btn-default" href='{{ url("/language/duplicateall") }}' 
-			role  ="button">
-			Duplicate all language content data
-			</a>
-		@endif
-		
+	<div class="col-sm-9">		
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -37,21 +27,41 @@
 					<td>{{ $language->is_active }}</td>
 					<td>{{ $language->is_default }}</td>
 					<td>
-						<a class="btn btn-default" href='{{ url("/language/edit/$language->id") }}' role="button">Edit</a>
-						<a class="btn btn-default" href='{{ url("/language/delete/$language->id") }}' role="button">Delete</a>
-						<a 
-						class ="btn btn-default" 
-						href  ='{{ url("/language/active/$language->id") }}' 
-						role  ="button"
-						>
-						@if($language->is_active === 'True')
-							Disable
-						@else
-							Activate
+						@if(\AclRepository::can('edit', 'Languages'))
+							<a 
+							class ="btn btn-default" 
+							href  ='{{ url("/language/edit/$language->id") }}' 
+							role  ="button">
+							Edit
+							</a>
 						@endif
-						</a>
-						@if($language->is_default !== 'True')
-							<a class="btn btn-default" href='{{ url("/language/default/$language->id") }}' role="button">Default</a>
+						@if(\AclRepository::can('delete', 'Languages'))
+							<a 
+							class ="btn btn-default" 
+							href  ='{{ url("/language/delete/$language->id") }}' 
+							role  ="button">
+							Delete
+							</a>
+						@endif
+
+						@if(\AclRepository::can('edit', 'Languages'))
+							<a 
+							class ="btn btn-default" 
+							href  ='{{ url("/language/active/$language->id") }}' 
+							role  ="button"
+							>
+							@if($language->is_active === 'True')
+								Disable
+							@else
+								Activate
+							@endif
+							</a>
+						@endif
+
+						@if(\AclRepository::can('edit', 'Languages'))
+							@if($language->is_default !== 'True')
+								<a class="btn btn-default" href='{{ url("/language/default/$language->id") }}' role="button">Default</a>
+							@endif
 						@endif
 					</td>
 				</tr>

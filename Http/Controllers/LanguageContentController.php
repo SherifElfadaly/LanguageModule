@@ -1,18 +1,10 @@
 <?php namespace App\Modules\Language\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Modules\Language\Repositories\LanguageRepository;
-use GalleryRepository;
 
 use Illuminate\Http\Request;
-class LanguageContentController extends Controller {
-
-	/**
-	 * The InstallationRepository implementation.
-	 *
-	 * @var InstallationRepository
-	 */
-	protected $language;
+class LanguageContentController extends BaseController {
 
 	/**
 	 * Create new ModuleController instance.
@@ -20,8 +12,7 @@ class LanguageContentController extends Controller {
 	 */
 	public function __construct(LanguageRepository $language)
 	{
-		$this->language = $language;
-		$this->middleware('AclAuthenticate');
+		parent::__construct($language, 'LanguageContents');
 	}
 
 	/**
@@ -31,8 +22,8 @@ class LanguageContentController extends Controller {
 	 */
 	public function getShow($item, $itemId)
 	{
-		$item             = ucfirst($item);
-		$languageContents =  $this->language->languageContentsNeedTranslation($item, $itemId);
+		$this->hasPermission('show');
+		$languageContents =  $this->repository->languageContentsNeedTranslation($item, $itemId);
 
 		return view('language::languagecontents.languagecontents', compact('languageContents', 'item', 'itemId'));
 	}
@@ -44,16 +35,17 @@ class LanguageContentController extends Controller {
 	 */
 	public function getCreate($item, $itemId, Request $request, $languageId = false, $languageContentId = false)
 	{	
+		$this->hasPermission('add');
 		if($request && $request->ajax()) 
 		{
-			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
+			$insertedGalleries = \GalleryRepository::getGalleries($request->input('ids'));
 			return $insertedGalleries;
 		}
 
-		$mediaLibrary        = GalleryRepository::getMediaLibrary();
-		$language            = $languageId ? $this->language->getLanguage($languageId) : $this->language->getDefaultLanguage();
-		$languageContent     = $languageContentId ? $this->language->getLanguageContent($languageContentId) : false;
-		$languageContentData = $this->language->getLanguageContentData($languageContent, $languageId);
+		$mediaLibrary        = \GalleryRepository::getMediaLibrary();
+		$language            = $languageId ? $this->repository->getLanguage($languageId) : $this->repository->getDefaultLanguage();
+		$languageContent     = $languageContentId ? $this->repository->getLanguageContent($languageContentId) : false;
+		$languageContentData = $this->repository->getLanguageContentData($languageContent, $languageId);
 
 		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'mediaLibrary'));
 	}
@@ -65,6 +57,7 @@ class LanguageContentController extends Controller {
 	 */
 	public function postCreate(Request $request, $item, $itemId)
 	{
+		$this->hasPermission('add');
 		$errors = array();
 		foreach ($request->input('title') as $key) 
 		{
@@ -94,9 +87,9 @@ class LanguageContentController extends Controller {
 		}
 		if ( ! empty($errors)) 	return redirect()->back()->withErrors($errors);
 
-		$this->language->createLanguageContent($request->all(), $item, $itemId);
+		$this->repository->createLanguageContent($request->all(), $item, $itemId);
 		
-		return 	redirect()->back()->with('message', 'Your languageContent had been created');
+		return 	redirect()->back()->with('message', 'Your Language Content had been created');
 	}
 
 	/**
@@ -107,21 +100,8 @@ class LanguageContentController extends Controller {
 	 */
 	public function getDelete($id)
 	{
-		$this->language->deleteLanguageContent($id);
+		$this->hasPermission('delete');
+		$this->repository->deleteLanguageContent($id);
 		return 	redirect()->back();
 	}
-
-	/**
-	 * Duplicate the languageContent for all languages
-	 * with the default language.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function getDuplicate($id)
-	{
-		$this->language->duplicateLanguageContentData($this->language->getLanguageContent($id));
-		return 	redirect()->back();
-	}
-
 }
