@@ -29,7 +29,7 @@
 
 			<div class="row">
 				<div class="col-sm-3 col-sm-offset-9">
-					<a href='{{ url("/language/languagecontents/show", [$item, $itemId]) }}' class="btn btn-block btn-default">back</a>
+					<a href='{{ url("admin/language/languagecontents/show", [$item, $itemId]) }}' class="btn btn-block btn-default">back</a>
 				</div>
 
 				<div class="col-sm-3 col-sm-offset-9">
@@ -65,10 +65,10 @@
 						name="title[]" 
 						placeholder="Title" 
 						@if($languageContent)
-						value = "{{ $languageContent->title }}"
+							value = "{{ $languageContent->title }}"
 						readonly 
 						@else
-						value = "{{ old('key') }}"
+							value = "{{ old('key') }}"
 						@endif
 						>
 					</div>
@@ -80,7 +80,7 @@
 						id="key" 
 						name="key[]" 
 						@if($languageContentData)
-						value = "{{ $languageContentData->key }}"
+							value = "{{ $languageContentData->key }}"
 						@endif
 						placeholder="Key" 
 						>
@@ -96,7 +96,7 @@
 						value="{{ old('value') }}"
 						>
 						@if($languageContentData)
-						{{ $languageContentData->value }}
+							{{ $languageContentData->value }}
 						@endif
 						</textarea> 
 					</div>

@@ -1,18 +1,16 @@
 <?php namespace App\Modules\Language\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Language\Repositories\LanguageRepository;
-
 use Illuminate\Http\Request;
+
 class LanguageContentController extends BaseController {
 
 	/**
 	 * Create new ModuleController instance.
-	 * @param InstallationRepository
 	 */
-	public function __construct(LanguageRepository $language)
+	public function __construct()
 	{
-		parent::__construct($language, 'LanguageContents');
+		parent::__construct('LanguageContents');
 	}
 
 	/**
@@ -23,7 +21,7 @@ class LanguageContentController extends BaseController {
 	public function getShow($item, $itemId)
 	{
 		$this->hasPermission('show');
-		$languageContents =  $this->repository->languageContentsNeedTranslation($item, $itemId);
+		$languageContents =  \CMS::languageContents()->languageContentsNeedTranslation($item, $itemId);
 
 		return view('language::languagecontents.languagecontents', compact('languageContents', 'item', 'itemId'));
 	}
@@ -38,14 +36,14 @@ class LanguageContentController extends BaseController {
 		$this->hasPermission('add');
 		if($request && $request->ajax()) 
 		{
-			$insertedGalleries = \GalleryRepository::getGalleries($request->input('ids'));
+			$insertedGalleries = \CMS::galleries()->getGalleries($request->input('ids'));
 			return $insertedGalleries;
 		}
 
-		$mediaLibrary        = \GalleryRepository::getMediaLibrary();
-		$language            = $languageId ? $this->repository->getLanguage($languageId) : $this->repository->getDefaultLanguage();
-		$languageContent     = $languageContentId ? $this->repository->getLanguageContent($languageContentId) : false;
-		$languageContentData = $this->repository->getLanguageContentData($languageContent, $languageId);
+		$mediaLibrary        = \CMS::galleries()->getMediaLibrary();
+		$language            = $languageId ? \CMS::language()->find($languageId) : \CMS::language()->getDefaultLanguage();
+		$languageContent     = $languageContentId ? \CMS::languageContents()->find($languageContentId) : false;
+		$languageContentData = \CMS::languageContents()->getLanguageContentData($languageContent, $languageId);
 
 		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'mediaLibrary'));
 	}
@@ -87,7 +85,7 @@ class LanguageContentController extends BaseController {
 		}
 		if ( ! empty($errors)) 	return redirect()->back()->withErrors($errors);
 
-		$this->repository->createLanguageContent($request->all(), $item, $itemId);
+		\CMS::languageContents()->createLanguageContent($request->all(), $item, $itemId);
 		
 		return 	redirect()->back()->with('message', 'Your Language Content had been created');
 	}
@@ -101,7 +99,7 @@ class LanguageContentController extends BaseController {
 	public function getDelete($id)
 	{
 		$this->hasPermission('delete');
-		$this->repository->deleteLanguageContent($id);
+		\CMS::languageContents()->delete($id);
 		return 	redirect()->back();
 	}
 }

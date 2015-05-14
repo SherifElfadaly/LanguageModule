@@ -1,7 +1,6 @@
 <?php namespace App\Modules\Language\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Modules\Language\Repositories\LanguageRepository;
 
 class LanguageFormRequest extends Request {
 

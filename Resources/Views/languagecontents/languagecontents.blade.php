@@ -6,7 +6,7 @@
 		<h3>{{ $item }}'s Language Content</h3>
 
 		<a 
-		class ="btn btn-default" href='{{ url("/language/languagecontents/create", [$item, $itemId]) }}' 
+		class ="btn btn-default" href='{{ url("admin/language/languagecontents/create", [$item, $itemId]) }}' 
 		role  ="button">
 		Add Language Content Data
 		</a>
@@ -28,20 +28,20 @@
 						<td>{{ $languageContent->languageContentData->first()->value }}</td>
 						<td>
 
-							@if(\AclRepository::can('delete', 'LanguageContents'))
+							@if(\CMS::permissions()->can('delete', 'LanguageContents'))
 								<a 
 								class ="btn btn-default" 
-								href  ='{{ url("/language/languagecontents/delete", [$languageContent->id]) }}' 
+								href  ='{{ url("admin/language/languagecontents/delete", [$languageContent->id]) }}' 
 								role  ="button">
 								Delete
 								</a>
 							@endif
 
-							@if(\AclRepository::can('add', 'LanguageContents'))
+							@if(\CMS::permissions()->can('add', 'LanguageContents'))
 								@foreach($languageContent->languages as $langugage)
 									<a 
 									class ="btn btn-default" 
-									href  ='{{ url("/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
+									href  ='{{ url("admin/language/languagecontents/create", [$item, $itemId, $langugage['lang']->id, $languageContent->id]) }}' 
 									role  ="button"
 									>
 									{{ $langugage['lang']->key }}

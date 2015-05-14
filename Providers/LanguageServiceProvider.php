@@ -21,12 +21,6 @@ class LanguageServiceProvider extends ServiceProvider
 		// methods or service providers to keep the code more focused and granular.
 		App::register('App\Modules\Language\Providers\RouteServiceProvider');
 
-		//Bind LanguageRepository Facade to the IoC Container
-		App::bind('LanguageRepository', function()
-		{
-			return new App\Modules\Language\Repositories\LanguageRepository;
-		});
-
 		$this->registerNamespaces();
 	}
 

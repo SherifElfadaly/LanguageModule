@@ -27,27 +27,27 @@
 					<td>{{ $language->is_active }}</td>
 					<td>{{ $language->is_default }}</td>
 					<td>
-						@if(\AclRepository::can('edit', 'Languages'))
+						@if(\CMS::permissions()->can('edit', 'Languages'))
 							<a 
 							class ="btn btn-default" 
-							href  ='{{ url("/language/edit/$language->id") }}' 
+							href  ='{{ url("admin/language/edit/$language->id") }}' 
 							role  ="button">
 							Edit
 							</a>
 						@endif
-						@if(\AclRepository::can('delete', 'Languages'))
+						@if(\CMS::permissions()->can('delete', 'Languages'))
 							<a 
 							class ="btn btn-default" 
-							href  ='{{ url("/language/delete/$language->id") }}' 
+							href  ='{{ url("admin/language/delete/$language->id") }}' 
 							role  ="button">
 							Delete
 							</a>
 						@endif
 
-						@if(\AclRepository::can('edit', 'Languages'))
+						@if(\CMS::permissions()->can('edit', 'Languages'))
 							<a 
 							class ="btn btn-default" 
-							href  ='{{ url("/language/active/$language->id") }}' 
+							href  ='{{ url("admin/language/active/$language->id") }}' 
 							role  ="button"
 							>
 							@if($language->is_active === 'True')
@@ -58,9 +58,9 @@
 							</a>
 						@endif
 
-						@if(\AclRepository::can('edit', 'Languages'))
+						@if(\CMS::permissions()->can('edit', 'Languages'))
 							@if($language->is_default !== 'True')
-								<a class="btn btn-default" href='{{ url("/language/default/$language->id") }}' role="button">Default</a>
+								<a class="btn btn-default" href='{{ url("admin/language/default/$language->id") }}' role="button">Default</a>
 							@endif
 						@endif
 					</td>

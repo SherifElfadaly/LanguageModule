@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'language'], function() {
+Route::group(['prefix' => 'admin/language'], function() {
 	Route::controllers([
 		'/languagecontents' => 'LanguageContentController',
 		'/'                 => 'LanguageController',

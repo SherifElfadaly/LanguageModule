@@ -12,27 +12,27 @@ class CreateLanguagePermissions extends Migration
 	 */
 	public function up()
 	{
-		foreach (\InstallationRepository::getModuleParts('language') as $modulePart) 
+		foreach (\CMS::CoreModuleParts()->getModuleParts('language') as $modulePart) 
 		{
 			if ($modulePart === 'LanguageContents') 
 			{
-				\AclRepository::insertDefaultItemPermissions(
-					$modulePart->part_key, 
-					$modulePart->id, 
-					[
-					'admin'   => ['show', 'add', 'delete'],
-					'manager' => ['show', 'add']
-					]);
+				\CMS::permissions()->insertDefaultItemPermissions(
+					                 $modulePart->part_key, 
+					                 $modulePart->id, 
+					                 [
+						                 'admin'   => ['show', 'add', 'delete'],
+						                 'manager' => ['show', 'add']
+					                 ]);
 			}
 			else
 			{
-				\AclRepository::insertDefaultItemPermissions(
-					$modulePart->part_key, 
-					$modulePart->id, 
-					[
-					'admin'   => ['show', 'add', 'edit', 'delete'],
-					'manager' => ['show', 'edit']
-					]);
+				\CMS::permissions()->insertDefaultItemPermissions(
+					                 $modulePart->part_key, 
+					                 $modulePart->id, 
+					                 [
+						                 'admin'   => ['show', 'add', 'edit', 'delete'],
+						                 'manager' => ['show', 'edit']
+					                 ]);
 			}
 		}
 	}
@@ -44,9 +44,9 @@ class CreateLanguagePermissions extends Migration
 	 */
 	public function down()
 	{
-		foreach (\InstallationRepository::getModuleParts('language') as $modulePart) 
+		foreach (\CMS::CoreModuleParts()->getModuleParts('language') as $modulePart) 
 		{
-			\AclRepository::deleteItemPermissions($modulePart->part_key);
+			\CMS::permissions()->deleteItemPermissions($modulePart->part_key);
 		}
 	}
 }

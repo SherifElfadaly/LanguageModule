@@ -1,7 +1,6 @@
 <?php namespace App\Modules\Language\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Language\Repositories\LanguageRepository;
 use App\Modules\Language\Http\Requests\LanguageFormRequest;
 
 
@@ -9,11 +8,10 @@ class LanguageController extends BaseController {
 
 	/**
 	 * Create new ModuleController instance.
-	 * @param InstallationRepository
 	 */
-	public function __construct(LanguageRepository $language)
+	public function __construct()
 	{
-		parent::__construct($language, 'Languages');
+		parent::__construct('Languages');
 	}
 
 	/**
@@ -24,7 +22,7 @@ class LanguageController extends BaseController {
 	public function getIndex()
 	{
 		$this->hasPermission('show');
-		$languages = $this->repository->getAllLanguages();
+		$languages = \CMS::languages()->all();
 		
 		return view('language::languages.languages', compact('languages'));
 	}
@@ -55,7 +53,7 @@ class LanguageController extends BaseController {
 		$data['is_active']   = $request->get('is_active')  ? 1 : 0;
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
-		$language = $this->repository->createLanguage($data);
+		$language = \CMS::language()->createLanguage($data);
 
 		return 	redirect()->back()->with('message', 'Your language had been created');
 	}
@@ -69,7 +67,7 @@ class LanguageController extends BaseController {
 	public function getEdit($id)
 	{
 		$this->hasPermission('edit');
-		$language = $this->repository->getLanguage($id);
+		$language = \CMS::language()->find($id);
 		return view('language::languages.editlanguage', compact('language'));
 	}
 
@@ -82,7 +80,7 @@ class LanguageController extends BaseController {
 	public function postEdit($id, LanguageFormRequest $request)
 	{
 		$this->hasPermission('edit');
-		$language            = $this->repository->getLanguage($id);
+		$language            = \CMS::language()->find($id);
 		$data['key']         = $request->get('key');
 		$data['title']       = $request->get('title');
 		$data['description'] = $request->get('description');
@@ -90,7 +88,7 @@ class LanguageController extends BaseController {
 		$data['is_active']   = $request->get('is_active') ? 1 : 0;
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
-		$this->repository->updatetLanguage($language->id, $data);
+		\CMS::language()->updatetLanguage($language->id, $data);
 		return 	redirect()->back()->with('message', 'Your language had been Updated');
 	}
 
@@ -103,7 +101,7 @@ class LanguageController extends BaseController {
 	public function getDelete($id)
 	{
 		$this->hasPermission('delete');
-		$this->repository->deleteLanguage($id);
+		\CMS::language()->delete($id);
 		return 	redirect()->back();
 	}
 
@@ -116,7 +114,7 @@ class LanguageController extends BaseController {
 	public function getActive($id)
 	{
 		$this->hasPermission('edit');
-		$this->repository->changeActive($id);
+		\CMS::language()->changeActive($id);
 
 		return 	redirect()->back();
 	}
@@ -130,7 +128,7 @@ class LanguageController extends BaseController {
 	public function getDefault($id)
 	{
 		$this->hasPermission('edit');
-		$this->repository->changeDefault($id);
+		\CMS::language()->changeDefault($id);
 		
 		return 	redirect()->back();
 	}
