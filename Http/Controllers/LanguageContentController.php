@@ -2,8 +2,19 @@
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
+use App\Modules\Language\Http\Requests\LanguageContentFormRequest;
 
 class LanguageContentController extends BaseController {
+
+	/**
+	 * Specify a list of extra permissions.
+	 * 
+	 * @var permissions
+	 */
+	protected $permissions = [
+	'getShow'                     => 'show',
+	'getLanguagecontentgalleries' => 'edit',
+	];
 
 	/**
 	 * Create new ModuleController instance.
@@ -16,77 +27,59 @@ class LanguageContentController extends BaseController {
 	/**
 	 * Display the languageContent.
 	 *
+	 * @param  string  $item              The name of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
+	 * @param  itneger $itemId            The id of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
 	 * @return Response
 	 */
+	
 	public function getShow($item, $itemId)
 	{
-		$this->hasPermission('show');
 		$languageContents =  \CMS::languageContents()->languageContentsNeedTranslation($item, $itemId);
-
 		return view('language::languagecontents.languagecontents', compact('languageContents', 'item', 'itemId'));
 	}
 
 	/**
 	 * Show the form for creating a new languageContent.
-	 *
+	 * 
+	 * @param  string  $item              The name of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
+	 * @param  itneger $itemId            The id of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
+	 * @param  integer $languageId
+	 * @param  integer $languageContentId
 	 * @return Response
 	 */
-	public function getCreate($item, $itemId, Request $request, $languageId = false, $languageContentId = false)
+	public function getCreate($item, $itemId, $languageId = false, $languageContentId = false)
 	{	
-		$this->hasPermission('add');
-		if($request && $request->ajax()) 
-		{
-			$insertedGalleries = \CMS::galleries()->getGalleries($request->input('ids'));
-			return $insertedGalleries;
-		}
+		$mediaLibrary    = \CMS::galleries()->getMediaLibrary();
+		$language        = $languageId ? \CMS::language()->find($languageId) : \CMS::language()->getDefaultLanguage();
+		$languageContent = $languageContentId ? \CMS::languageContents()->find($languageContentId) : false;
+		$translations    = \CMS::languageContents()->getLanguageContentTranslations($languageContent, $languageId);
 
-		$mediaLibrary        = \CMS::galleries()->getMediaLibrary();
-		$language            = $languageId ? \CMS::language()->find($languageId) : \CMS::language()->getDefaultLanguage();
-		$languageContent     = $languageContentId ? \CMS::languageContents()->find($languageContentId) : false;
-		$languageContentData = \CMS::languageContents()->getLanguageContentData($languageContent, $languageId);
-
-		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'languageContentData', 'itemId', 'item', 'mediaLibrary'));
+		return view('language::languagecontents.addlanguagecontent', compact('language', 'languageContent', 'translations', 'itemId', 'item', 'mediaLibrary'));
 	}
 
 	/**
 	 * Store a newly created languageContent in storage.
-	 *
-	 * @return Response
+	 * 
+	 * @param  LanguageContentFormRequest $request
+	 * @param  string  $item              The name of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
+	 * @param  itneger $itemId            The id of the item the 
+	 *                                    language content belongs to. 
+	 *                                    ex: 'user', 'content' ....
+	 * @return response
 	 */
-	public function postCreate(Request $request, $item, $itemId)
+	public function postCreate(LanguageContentFormRequest $request, $item, $itemId)
 	{
-		$this->hasPermission('add');
-		$errors = array();
-		foreach ($request->input('title') as $key) 
-		{
-			if (strlen(trim($key)) == 0) 
-			{
-				$errors[] = "Title Required";
-				break;
-			}
-		}
-
-		foreach ($request->input('key') as $key) 
-		{
-			if (strlen(trim($key)) == 0) 
-			{
-				$errors[] = "Key Required";
-				break;
-			}
-		}
-
-		foreach ($request->input('value') as $value) 
-		{
-			if (strlen(trim($value)) == 0) 
-			{
-				$errors[] = "Value Required";
-				break;
-			}
-		}
-		if ( ! empty($errors)) 	return redirect()->back()->withErrors($errors);
-
 		\CMS::languageContents()->createLanguageContent($request->all(), $item, $itemId);
-		
 		return 	redirect()->back()->with('message', 'Your Language Content had been created');
 	}
 
@@ -98,8 +91,21 @@ class LanguageContentController extends BaseController {
 	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::languageContents()->delete($id);
 		return 	redirect()->back();
+	}
+
+	/**
+	 * Return a gallery array from the given ids,
+	 * handle the ajax request for inserting galleries
+	 * to the language content.
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function getLanguagecontentgalleries(Request $request)
+	{	
+		$insertedGalleries = \CMS::galleries()->getGalleries($request->input('ids'));
+		return $insertedGalleries;
 	}
 }

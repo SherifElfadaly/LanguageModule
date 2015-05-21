@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLanguageContentDatasTable extends Migration
+class CreateTranslationsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,16 +12,14 @@ class CreateLanguageContentDatasTable extends Migration
 	 */
 	public function up()
 	{
-		if ( ! Schema::hasTable('language_content_data'))
+		if ( ! Schema::hasTable('translations'))
 		{
-			Schema::create('language_content_data', function(Blueprint $table) {
+			Schema::create('translations', function(Blueprint $table) {
 				$table->bigIncrements('id');	
 				$table->string('key', 100)->index();
 				$table->text('value');
-
 				$table->bigInteger('language_content_id')->unsigned();
 				$table->foreign('language_content_id')->references('id')->on('language_contents');
-
 				$table->bigInteger('language_id')->unsigned();
 				$table->foreign('language_id')->references('id')->on('languages');
 
@@ -37,9 +35,9 @@ class CreateLanguageContentDatasTable extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasTable('language_content_data'))
+		if (Schema::hasTable('translations'))
 		{
-			Schema::drop('language_content_data');
+			Schema::drop('translations');
 		}
 	}
 }

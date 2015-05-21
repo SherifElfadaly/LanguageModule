@@ -2,8 +2,10 @@
 	$(document).ready(function () {
 		mediaLibrary.init(function(checkedValues)
 		{
+			url = '{{ url("admin/language/languagecontents/languagecontentgalleries") }}';
+			console.log(url);
 			$.ajax({
-				url         : window.location,
+				url         : url,
 				type        : 'GET',
 				data        : {'ids': checkedValues},
 				success     : function(data)

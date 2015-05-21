@@ -7,7 +7,17 @@ use App\Modules\Language\Http\Requests\LanguageFormRequest;
 class LanguageController extends BaseController {
 
 	/**
-	 * Create new ModuleController instance.
+	 * Specify a list of extra permissions.
+	 * 
+	 * @var permissions
+	 */
+	protected $permissions = [
+	'getActive'  => 'edit',
+	'getDefault' => 'edit',
+	];
+
+	/**
+	 * Create new LanguageController instance.
 	 */
 	public function __construct()
 	{
@@ -21,9 +31,7 @@ class LanguageController extends BaseController {
 	 */
 	public function getIndex()
 	{
-		$this->hasPermission('show');
 		$languages = \CMS::languages()->all();
-		
 		return view('language::languages.languages', compact('languages'));
 	}
 
@@ -34,18 +42,17 @@ class LanguageController extends BaseController {
 	 */
 	public function getCreate()
 	{
-		$this->hasPermission('add');
 		return view('language::languages.addlanguage');
 	}
 
 	/**
 	 * Store a newly created language in storage.
-	 *
+	 * 
+	 * @param  LanguageFormRequest $request
 	 * @return Response
 	 */
 	public function postCreate(LanguageFormRequest $request)
 	{
-		$this->hasPermission('add');
 		$data['key']         = $request->get('key');
 		$data['title']       = $request->get('title');
 		$data['description'] = $request->get('description');
@@ -54,7 +61,6 @@ class LanguageController extends BaseController {
 		$data['is_default']  = $request->get('is_default') ? 1 : 0;
 
 		$language = \CMS::language()->createLanguage($data);
-
 		return 	redirect()->back()->with('message', 'Your language had been created');
 	}
 
@@ -66,7 +72,6 @@ class LanguageController extends BaseController {
 	 */
 	public function getEdit($id)
 	{
-		$this->hasPermission('edit');
 		$language = \CMS::language()->find($id);
 		return view('language::languages.editlanguage', compact('language'));
 	}
@@ -75,11 +80,11 @@ class LanguageController extends BaseController {
 	 * Update the specified language in storage.
 	 *
 	 * @param  int  $id
+	 * @param  LanguageFormRequest $request
 	 * @return Response
 	 */
 	public function postEdit($id, LanguageFormRequest $request)
 	{
-		$this->hasPermission('edit');
 		$language            = \CMS::language()->find($id);
 		$data['key']         = $request->get('key');
 		$data['title']       = $request->get('title');
@@ -100,22 +105,19 @@ class LanguageController extends BaseController {
 	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::language()->delete($id);
 		return 	redirect()->back();
 	}
 
 	/**
-	 * Activate or disaple a given language.
+	 * Activate or deactivate a given language.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function getActive($id)
 	{
-		$this->hasPermission('edit');
 		\CMS::language()->changeActive($id);
-
 		return 	redirect()->back();
 	}
 
@@ -127,9 +129,7 @@ class LanguageController extends BaseController {
 	 */
 	public function getDefault($id)
 	{
-		$this->hasPermission('edit');
 		\CMS::language()->changeDefault($id);
-		
 		return 	redirect()->back();
 	}
 }

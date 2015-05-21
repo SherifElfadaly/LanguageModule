@@ -25,15 +25,17 @@ class CreateLanguagesTable extends Migration
 				$table->timestamps();
 			});
 
-			DB::table('languages')->insert(
-				array(
-					'key'         => 'en',
-					'title'    	  => 'English',
-					'description' => 'English Language',
-					'flag'        => 'English',
-					'is_active'   => 1,
-					'is_default'  => 1,
-					)
+			\CMS::languages()->insert(
+				[
+					[
+						'key'         => 'en',
+						'title'    	  => 'English',
+						'description' => 'English Language',
+						'flag'        => 'English',
+						'is_active'   => 1,
+						'is_default'  => 1,
+					],
+				]
 				);
 		}
 	}

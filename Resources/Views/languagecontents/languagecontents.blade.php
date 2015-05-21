@@ -3,12 +3,12 @@
 
 <div class="container">
 	<div class="col-sm-9">
-		<h3>{{ $item }}'s Language Content</h3>
 
+		<h3>{{ $item }}'s Translations</h3>
 		<a 
 		class ="btn btn-default" href='{{ url("admin/language/languagecontents/create", [$item, $itemId]) }}' 
 		role  ="button">
-		Add Language Content Data
+		Add Translations
 		</a>
 
 		<table class="table table-striped">
@@ -25,7 +25,7 @@
 					<tr>
 						<th scope="row">{{ $languageContent->id }}</th>
 						<td>{{ $languageContent->title }}</td>
-						<td>{{ $languageContent->languageContentData->first()->value }}</td>
+						<td>{{ $languageContent->translations->first()->value }}</td>
 						<td>
 
 							@if(\CMS::permissions()->can('delete', 'LanguageContents'))

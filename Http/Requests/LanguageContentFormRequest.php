@@ -2,7 +2,7 @@
 
 use App\Http\Requests\Request;
 
-class LanguageFormRequest extends Request {
+class LanguageContentFormRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class LanguageFormRequest extends Request {
 	public function rules()
 	{
 		return [
-			'key'         => 'required|max:3|unique:languages,id,'.$this->get('id'),
-			'title'       => 'required|max:150',
-			'description' => 'required|max:255',
-			'flag'        => 'required|max:100',
+			'title' => 'required|max:150',
+			'key'   => 'required|max:100',
+			'value' => 'required',
 		];
 	}
 

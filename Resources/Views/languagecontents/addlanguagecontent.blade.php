@@ -23,7 +23,7 @@
 			</div>
 		@endif
 
-		<h3>Add New Language Content</h3>
+		<h3>Add New Translation</h3>
 		<form class="form-inline" id="languageContent_form_edit" method="post">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -37,18 +37,13 @@
 				</div>
 				
 				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-4 control-label">Language</label>
+					<label class="col-sm-4 control-label">Language</label>
 					<div class="col-sm-3">
 						<select class="form-control" name="language_id" id="languageContent_language">
 							<option value="{{ $language->id }}" selected>{{ $language->title }}</option>
 						</select>
 					</div>
 				</div>
-
-				<div class="col-sm-3 col-sm-offset-1">
-					<a id="add" class="btn btn-default" @if($languageContent) disabled @endif>Add</a>
-					<a id="remove" class="btn btn-default" @if($languageContent) disabled @endif>Remove</a>
-				</div>	
 			</div>
 
 			<div class="row"><br></div>
@@ -62,7 +57,7 @@
 						type="text" 
 						class="form-control" 
 						id="title" 
-						name="title[]" 
+						name="title" 
 						placeholder="Title" 
 						@if($languageContent)
 							value = "{{ $languageContent->title }}"
@@ -78,9 +73,9 @@
 						type="text" 
 						class="form-control" 
 						id="key" 
-						name="key[]" 
-						@if($languageContentData)
-							value = "{{ $languageContentData->key }}"
+						name="key" 
+						@if($translations)
+							value = "{{ $translations->key }}"
 						@endif
 						placeholder="Key" 
 						>
@@ -91,12 +86,12 @@
 						type="text" 
 						class="form-control" 
 						id="value" 
-						name="value[]" 
+						name="value" 
 						placeholder="Value" 
 						value="{{ old('value') }}"
 						>
-						@if($languageContentData)
-							{{ $languageContentData->value }}
+						@if($translations)
+							{{ $translations->value }}
 						@endif
 						</textarea> 
 					</div>
@@ -112,7 +107,6 @@
 	</div>
 </div>
 
-@include('language::languagecontents.assets.add-remove-buttons')
 @include('language::languagecontents.assets.addlanguagecontentgalleries')
 @include('language::languagecontents.assets.tinymce')
 @endsection
