@@ -84,10 +84,16 @@ class LanguageContentRepository extends AbstractRepository
 			$data = array();
 			foreach ($this->getItemLanguageContent($item, $itemId) as $languageContent) 
 			{
-				$translations                  =  $languageContent->translations()->
+				$translation                   =  $languageContent->translations()->
 			                                                        where('language_id', \CMS::languages()->getLanguageByKey($languageKey)->id)->
 			                                                        first();
-				$data[$languageContent->title] = $translations->value;
+				if (is_null($translation)) 
+				{
+					$translation               =  $languageContent->translations()->
+			                                                        where('language_id', \CMS::languages()->getDefaultLanguage()->id)->
+			                                                        first();
+				}
+				$data[$languageContent->title] = $translation->value;
 			}
 			return $data;
 		}
@@ -96,11 +102,19 @@ class LanguageContentRepository extends AbstractRepository
 			$languageContent = $this->getItemLanguageContent($item, $itemId)->
 			                          where('title', $title)->
 			                          first();
+			if (is_null($languageContent)) return '';
 			
-			$translations    = $languageContent->translations()->
+			$translation     = $languageContent->translations()->
 			                                     where('language_id', \CMS::language()->getLanguageByKey($languageKey)->id)->
 			                                     first();
-           return $translations->value;
+
+			if (is_null($translation)) 
+			{
+				$translation = $languageContent->translations()->
+			                                     where('language_id', \CMS::language()->getDefaultLanguage()->id)->
+			                                     first();
+			}
+           return $translation->value;
 		}
 	}
 
