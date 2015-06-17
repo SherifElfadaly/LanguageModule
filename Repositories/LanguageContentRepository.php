@@ -49,7 +49,7 @@ class LanguageContentRepository extends AbstractRepository
 	 * @param  string  $item        The name of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
-	 * @param  itneger $itemId      The id of the item the 
+	 * @param  integer $itemId      The id of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
 	 * @return collection
@@ -69,7 +69,7 @@ class LanguageContentRepository extends AbstractRepository
 	 * @param  string  $item        The name of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
-	 * @param  itneger $itemId      The id of the item the 
+	 * @param  integer $itemId      The id of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
 	 * @param  string  $languageKey
@@ -126,7 +126,7 @@ class LanguageContentRepository extends AbstractRepository
 	 * @param  string  $item        The name of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
-	 * @param  itneger $itemId      The id of the item the 
+	 * @param  integer $itemId      The id of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
 	 * @return void
@@ -145,13 +145,13 @@ class LanguageContentRepository extends AbstractRepository
 
 	/**
 	 * Create or update the given translations
-	 * for pecified item and item id.
+	 * for specified item and item id.
 	 * 
 	 * @param  array   $data
 	 * @param  string  $item        The name of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
-	 * @param  itneger $itemId      The id of the item the 
+	 * @param  integer $itemId      The id of the item the 
 	 *                              language content belongs to. 
 	 *                              ex: 'user', 'content' ....
 	 * @return void
@@ -192,7 +192,7 @@ class LanguageContentRepository extends AbstractRepository
 	 * @param  string  $item   The name of the item the 
 	 *                         language content belongs to. 
 	 *                         ex: 'user', 'content' ....
-	 * @param  itneger $itemId The id of the item the 
+	 * @param  integer $itemId The id of the item the 
 	 *                         language content belongs to. 
 	 *                         ex: 'user', 'content' ....
 	 * @return void
@@ -229,7 +229,7 @@ class LanguageContentRepository extends AbstractRepository
 	 * @param  string  $item   The name of the item the 
 	 *                         language content belongs to. 
 	 *                         ex: 'user', 'content' ....
-	 * @param  itneger $itemId The id of the item the 
+	 * @param  integer $itemId The id of the item the 
 	 *                         language content belongs to. 
 	 *                         ex: 'user', 'content' ....
 	 * @return collection

@@ -30,7 +30,7 @@ class LanguageContentController extends BaseController {
 	 * @param  string  $item              The name of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
-	 * @param  itneger $itemId            The id of the item the 
+	 * @param  integer $itemId            The id of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
 	 * @return Response
@@ -48,7 +48,7 @@ class LanguageContentController extends BaseController {
 	 * @param  string  $item              The name of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
-	 * @param  itneger $itemId            The id of the item the 
+	 * @param  integer $itemId            The id of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
 	 * @param  integer $languageId
@@ -72,7 +72,7 @@ class LanguageContentController extends BaseController {
 	 * @param  string  $item              The name of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
-	 * @param  itneger $itemId            The id of the item the 
+	 * @param  integer $itemId            The id of the item the 
 	 *                                    language content belongs to. 
 	 *                                    ex: 'user', 'content' ....
 	 * @return response

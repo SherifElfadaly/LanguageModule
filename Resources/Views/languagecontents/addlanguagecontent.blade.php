@@ -63,7 +63,7 @@
 							value = "{{ $languageContent->title }}"
 						readonly 
 						@else
-							value = "{{ old('key') }}"
+							value = "{{ old('title') }}"
 						@endif
 						>
 					</div>
@@ -76,6 +76,8 @@
 						name="key" 
 						@if($translations)
 							value = "{{ $translations->key }}"
+						@else
+							value = "{{ old('key') }}"
 						@endif
 						placeholder="Key" 
 						>
