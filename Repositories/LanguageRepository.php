@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Language\Repositories;
 
-use App\AbstractRepositories\AbstractRepository;
+use App\Modules\Core\AbstractRepositories\AbstractRepository;
 
 class LanguageRepository extends AbstractRepository
 {	

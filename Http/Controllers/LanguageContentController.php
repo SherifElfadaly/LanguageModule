@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Language\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
+use App\Modules\Core\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Modules\Language\Http\Requests\LanguageContentFormRequest;
 
