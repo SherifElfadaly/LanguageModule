@@ -5,12 +5,12 @@
 	<div class="col-sm-9">
 
 		<h3>{{ $item }}'s Translations</h3>
-		<a 
-		class ="btn btn-default" href='{{ url("admin/language/languagecontents/create", [$item, $itemId]) }}' 
-		role  ="button">
-		Add Translations
-		</a>
-
+		@if(\CMS::permissions()->can('add', 'LanguageContents'))
+			<a 
+			class ="btn btn-default" href='{{ url("admin/language/languagecontents/create", [$item, $itemId]) }}'>
+				Add Translations
+			</a>
+		@endif
 		<table class="table table-striped">
 			<thead>
 				<tr>

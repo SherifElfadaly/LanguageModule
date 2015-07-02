@@ -3,8 +3,9 @@
     "slug": "language",
     "version": "1.0",
     "description": "This is the description for the Language module.",
-    "repo_link": "https:\/\/github.com\/SherifElfadaly\/MarvelLanguage.git",
+    "repo_link": "https://github.com/SherifElfadaly/LanguageModule.git",
     "type": "plugin",
     "enabled": true,
-    "module_parts": ["Languages", "LanguageContents"]
+    "module_parts": ["Languages", "LanguageContents"],
+    "order" : 7
 }

@@ -33,7 +33,7 @@
 					type        ="text" 
 					class       ="form-control" 
 					id          ="language_key" 
-					name="key" 
+					name		="key" 
 					placeholder ="Language Key" 
 					value       ="{{ old('key') }}"
 					>
